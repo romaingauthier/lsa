@@ -94,13 +94,10 @@ class Lsa(object):
             concepts.append(concept)
         return concepts
 
-
-
 if __name__ == '__main__':
     logging.getLogger().setLevel('INFO')
     logging.basicConfig(format='%(message)s')
-    lsa = Lsa('/home/romain/code/lsa/txtbob', 20, 'txt')
+    lsa = Lsa(sys.argv[1], int(sys.argv[2]), 'txt')
     c = lsa.concepts(10)
     for concept in c:
         print [con[0] for con in concept]
-    print lsa

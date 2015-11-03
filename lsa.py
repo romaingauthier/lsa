@@ -10,9 +10,8 @@ class Bow(object):
         self.bow = None
         if self.path:
             self.__parse()
-        self.voc = self.bow.keys()
         self.tfidf = None
-        self.empty = False if len(self.voc) else True
+        self.empty = False if len(self.bow.keys()) else True
 
     def __parse(self):
         with open(self.path, 'r') as doc_file:
@@ -56,15 +55,11 @@ class Lsa(object):
 
     def gen_docs(self):
         self.__fetch_doc_paths()
-        self.docs = list()
-        for doc_name in self.doc_names:
-            bow = Bow(doc_name)
-            if not bow.empty:
-                self.docs.append(bow)
+        self.docs = [Bow(dname) for dname in self.dnames]
 
     def gen_voc(self):
         for doc in self.docs:
-            self.voc = self.voc.union(doc.voc)
+            self.voc = self.voc.union(doc.bow.keys())
         self.rev_voc = {word_idx: word for word_idx, word in enumerate(self.voc)}
 
     def gen_tfidf(self):

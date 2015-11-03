@@ -27,7 +27,7 @@ class Lsa(object):
         self.nb_topics = nb_topics
         self.file_ext = file_ext
         self.voc = set()
-        self.doc_names = None
+        self.dnames = None
         self.docs = None
         self.tfidf = None
         self.Uk = None
@@ -40,12 +40,12 @@ class Lsa(object):
 
     def __fetch_doc_paths(self):
         if len(self.file_ext):
-            self.doc_names = list()
+            self.dnames = list()
             for ext in self.file_ext:
-                self.doc_names += glob(osp.join(self.path, '*.%s' % ext))
+                self.dnames += glob(osp.join(self.path, '*.%s' % ext))
         else:
-            self.doc_names = glob(osp.join(self.path, '*.*'))
-        logging.info("%i documents under %s", len(self.doc_names), self.path)
+            self.dnames = glob(osp.join(self.path, '*.*'))
+        logging.info("%i documents under %s", len(self.dnames), self.path)
 
     def build(self):
         self.gen_docs()

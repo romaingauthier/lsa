@@ -22,9 +22,9 @@ class Bow(object):
 
 class Lsa(object):
 
-    def __init__(self, path=None, nb_topics=10, *file_ext):
+    def __init__(self, path=None, nb_concepts=10, *file_ext):
         self.path = path
-        self.nb_topics = nb_topics
+        self.nb_concepts = nb_concepts
         self.file_ext = file_ext
         self.voc = set()
         self.dnames = None
@@ -51,7 +51,7 @@ class Lsa(object):
         self.gen_docs()
         self.gen_voc()
         self.gen_tfidf()
-        self.svd_k(self.nb_topics)
+        self.svd_k(self.nb_concepts)
 
     def gen_docs(self):
         self.__fetch_doc_paths()

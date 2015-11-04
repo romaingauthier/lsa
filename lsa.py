@@ -3,6 +3,14 @@ from collections import Counter
 import os.path as osp
 import numpy as np
 import math, re, logging, itertools, sys
+import argparse
+
+def init_arg_parser():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("directory", help = "path to the corpus directory")
+    parser.add_argument("nbconcepts", help = "number of concepts")
+    return parser.parse_args()
+
 
 class Bow(object):
     def __init__(self, path=None):
@@ -97,7 +105,15 @@ class Lsa(object):
 if __name__ == '__main__':
     logging.getLogger().setLevel('INFO')
     logging.basicConfig(format='%(message)s')
-    lsa = Lsa(sys.argv[1], int(sys.argv[2]), 'txt')
-    c = lsa.concepts(10)
-    for concept in c:
-        print [con[0] for con in concept]
+
+    args = init_arg_parser()
+    nb_concepts = None
+    try:
+        nb_concepts = int(args.nbconcepts)
+    except ValueError as detail:
+        logging.error("could not read argument nbconcept: %s", detail)
+        sys.exit(1)
+    lsa = Lsa(args.directory, nb_concepts, 'txt')
+    concepts = lsa.concepts(10)
+    for concept in concepts:
+        print [item[0] for item in concept]

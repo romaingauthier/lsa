@@ -44,7 +44,8 @@ class Lsa(object):
         self.build()
 
     def __str__(self):
-        return "Lsa (path = %s, vocabulary size = %i)" % (self.path, len(self.voc))
+        return "Lsa (path = %s, vocabulary size = %i)" \
+                % (self.path, len(self.voc))
 
     def __fetch_doc_paths(self):
         if len(self.file_ext):
@@ -68,24 +69,25 @@ class Lsa(object):
     def gen_voc(self):
         for doc in self.docs:
             self.voc = self.voc.union(doc.bow.keys())
-        self.rev_voc = {word_idx: word for word_idx, word in enumerate(self.voc)}
+        self.rev_voc = {wd_idx: word for wd_idx, word in enumerate(self.voc)}
 
     def gen_tfidf(self):
         """ Generates the tfidf matrix, which aims at reducing the impact of
         both highly represented terms and rare terms. """
         self.tfidf = np.zeros(shape=(len(self.voc), len(self.docs)))
         highest_count = float(max([max(doc.bow.values()) for doc in self.docs]))
-        for doc_idx, doc in enumerate(self.docs):
-            for word_idx, word in enumerate(self.voc):
-                self.tfidf[word_idx , doc_idx] = doc.bow.get(word, 0)/highest_count
-        for word_idx, word in enumerate(self.voc):
+        for d_idx, doc in enumerate(self.docs):
+            for w_idx, word in enumerate(self.voc):
+                self.tfidf[w_idx, d_idx] = doc.bow.get(word, 0)/highest_count
+        for w_idx, word in enumerate(self.voc):
             norm = float(sum(1 for doc in self.docs if doc.bow.get(word, 0)))
-            self.tfidf[word_idx] *= math.log(len(self.docs)/norm)
+            self.tfidf[w_idx] *= math.log(len(self.docs)/norm)
 
     def svd_k(self, k):
         U, S, V = np.linalg.svd(self.tfidf)
         if k > len(S):
-            raise ValueError("given k (%i) is higher than the dimension of S (%i)" % (k, len(S)))
+            raise ValueError("k (%i) is higher than the dimension of S (%i)" \
+                             % (k, len(S)))
         Sk = np.identity(k)
         for i in xrange(0, k):
             Sk[i] *= S[i]

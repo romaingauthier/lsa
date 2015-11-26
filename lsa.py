@@ -71,6 +71,8 @@ class Lsa(object):
         self.rev_voc = {word_idx: word for word_idx, word in enumerate(self.voc)}
 
     def gen_tfidf(self):
+        """ Generates the tfidf matrix, which aims at reducing the impact of
+        both highly represented terms and rare terms. """
         self.tfidf = np.zeros(shape=(len(self.voc), len(self.docs)))
         highest_count = float(max([max(doc.bow.values()) for doc in self.docs]))
         for doc_idx, doc in enumerate(self.docs):

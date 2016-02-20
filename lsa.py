@@ -9,6 +9,7 @@ def init_arg_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument("directory", help = "path to the corpus directory")
     parser.add_argument("nbconcepts", help = "number of concepts")
+    parser.add_argument("nbwords", help = "number of concepts")
     return parser.parse_args()
 
 
@@ -112,12 +113,14 @@ if __name__ == '__main__':
 
     args = init_arg_parser()
     nb_concepts = None
+    nb_words = None
     try:
         nb_concepts = int(args.nbconcepts)
+        nb_words = int(args.nbwords)
     except ValueError as detail:
         logging.error("could not read argument nbconcept: %s", detail)
         sys.exit(1)
     lsa = Lsa(args.directory, nb_concepts, 'txt')
-    concepts = lsa.concepts(10)
+    concepts = lsa.concepts(nb_words)
     for concept in concepts:
         print [item[0] for item in concept]

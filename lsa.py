@@ -42,6 +42,7 @@ class Lsa(object):
         self.Uk = None
         self.Vk = None
         self.Sk = None
+        self.concepts = None
         self.build()
 
     def __str__(self):
@@ -96,16 +97,20 @@ class Lsa(object):
         self.Vk = V[0:k]
         self.Sk = Sk
 
-    def concepts(self, nb_words):
-        concepts = list()
+    def gen_concepts(self, nb_words):
+        self.concepts = list()
         matrix = np.dot(np.linalg.inv(self.Sk), self.Uk.transpose())
         for line in matrix:
             threshold = sorted(line)[nb_words]
             concept = [(self.rev_voc[idx], item) for idx, item \
                     in enumerate(line) if item < threshold]
             concept.sort(key = lambda x : x[1])
-            concepts.append(concept)
-        return concepts
+            self.concepts.append(concept)
+
+    def pretty_print(self):
+        for idx, concept in enumerate(self.concepts):
+            print 'concept #%i' % idx
+            print ' '.join([item[0] for item in concept])
 
 if __name__ == '__main__':
     logging.getLogger().setLevel('INFO')
@@ -121,6 +126,5 @@ if __name__ == '__main__':
         logging.error("could not read argument nbconcept: %s", detail)
         sys.exit(1)
     lsa = Lsa(args.directory, nb_concepts, 'txt')
-    concepts = lsa.concepts(nb_words)
-    for concept in concepts:
-        print [item[0] for item in concept]
+    lsa.gen_concepts(nb_words)
+    lsa.pretty_print()

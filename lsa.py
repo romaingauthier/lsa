@@ -9,7 +9,7 @@ def init_arg_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument("directory", help = "path to the corpus directory")
     parser.add_argument("nbconcepts", help = "number of concepts")
-    parser.add_argument("nbwords", help = "number of concepts")
+    parser.add_argument("nbwords", help = "number of words per concept")
     return parser.parse_args()
 
 

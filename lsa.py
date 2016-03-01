@@ -2,7 +2,11 @@ from glob import glob
 from collections import Counter
 import os.path as osp
 import numpy as np
-import math, re, logging, itertools, sys
+import re
+import logging
+import itertools
+import sys
+from math import log
 import argparse
 
 def init_arg_parser():
@@ -83,7 +87,7 @@ class Lsa(object):
                 self.tfidf[w_idx, d_idx] = doc.bow.get(word, 0)/highest_count
         for w_idx, word in enumerate(self.voc):
             norm = float(sum(1 for doc in self.docs if doc.bow.get(word, 0)))
-            self.tfidf[w_idx] *= math.log(len(self.docs)/norm)
+            self.tfidf[w_idx] *= log(len(self.docs)/norm)
 
     def svd_k(self, k):
         U, S, V = np.linalg.svd(self.tfidf)
